@@ -27,17 +27,19 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2
 
-    - name: Build, tag, and push docker image to Amazon ECR
-      env:
-        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        REPOSITORY: devops-pipeline
-        IMAGE_TAG: ${{ github.sha }}
-      run: |
-        envsubst < Dockerfile.template | docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -f - .
-        docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+    # - name: Build, tag, and push docker image to Amazon ECR
+    #   env:
+    #     REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+    #     REPOSITORY: devops-pipeline
+    #     IMAGE_TAG: ${{ github.sha }}
+    #   run: |
+    #     envsubst < Dockerfile.template | docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -f - .
+    #     docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+        
     - name: Checkout Helm Repository
       uses: actions/checkout@v3
       with:
         repository: seonghyeoklee/devops-helm-charts
         path: helm-chart
         ref: main
+        ssh-key: ${{ secrets.HELM_CHART_REPOSITORY_KEY }}
