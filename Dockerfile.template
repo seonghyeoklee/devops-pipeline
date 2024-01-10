@@ -8,10 +8,14 @@ RUN ./gradlew build -p ${MODULE}
 
 FROM openjdk:11-jre-slim
 
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+
 WORKDIR /app
 
 COPY --from=builder /workspace/app/${MODULE}/build/libs/${MODULE}.jar ./${MODULE}.jar
 
 EXPOSE 8080
+
+USER appuser
 
 ENTRYPOINT ["java", "-jar", "${MODULE}.jar"]

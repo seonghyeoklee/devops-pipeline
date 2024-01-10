@@ -1,0 +1,11 @@
+FROM gradle:latest as builder
+
+WORKDIR /workspace/app
+
+COPY . /workspace/app/
+
+RUN ./gradlew build -p membership-service
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "membership-service/build/libs/membership-service-1.0.0.jar"]
